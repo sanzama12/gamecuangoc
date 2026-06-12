@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đường Lên Đỉnh Gymnasium</title>
+    <meta name="description" content="Trò chơi trắc nghiệm kiến thức về hệ thống giáo dục Đức">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Decorative blobs -->
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+
+    <div class="game-container">
+
+        <!-- ========== START SCREEN ========== -->
+        <div class="screen start-screen" id="startScreen">
+            <div class="start-mountain">🏔️</div>
+            <h1 class="start-title">Đường Lên Đỉnh<br>Gymnasium</h1>
+            <p class="start-desc">Chinh phục đỉnh núi tri thức với các câu hỏi<br>về hệ thống giáo dục Đức!</p>
+
+            <div class="rules-card">
+                <div class="rules-title">📋 Luật chơi</div>
+                <div class="rule">
+                    <span class="rule-dot rule-dot-blue"></span>
+                    <span>4 câu hỏi trắc nghiệm – mỗi câu 4 đáp án</span>
+                </div>
+                <div class="rule">
+                    <span class="rule-dot rule-dot-gold"></span>
+                    <span>Trả lời đúng: <strong>+10 điểm</strong></span>
+                </div>
+                <div class="rule">
+                    <span class="rule-dot rule-dot-red"></span>
+                    <span>Bắt đầu với 3 ❤️ – sai mất 1 mạng</span>
+                </div>
+                <div class="rule">
+                    <span class="rule-dot rule-dot-green"></span>
+                    <span>Hết mạng hoặc trả lời xong = Kết thúc</span>
+                </div>
+            </div>
+
+            <button class="btn-start" id="startBtn">
+                🚀 Bắt Đầu Chơi
+            </button>
+        </div>
+
+        <!-- ========== GAME SCREEN ========== -->
+        <div class="screen game-screen hidden" id="gameScreen">
+
+            <!-- Top Bar -->
+            <div class="top-bar">
+                <div class="top-bar-item">
+                    <div class="top-bar-icon">⭐</div>
+                    <div class="top-bar-info">
+                        <div class="top-bar-label">Điểm</div>
+                        <div class="top-bar-value" id="scoreDisplay">0</div>
+                    </div>
+                </div>
+                <div class="top-bar-item">
+                    <div class="top-bar-icon">❤️</div>
+                    <div class="top-bar-info">
+                        <div class="top-bar-label">Mạng</div>
+                        <div class="hearts" id="livesDisplay">
+                            <span class="heart-icon" id="heart1">❤️</span>
+                            <span class="heart-icon" id="heart2">❤️</span>
+                            <span class="heart-icon" id="heart3">❤️</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="top-bar-item">
+                    <div class="top-bar-icon">📝</div>
+                    <div class="top-bar-info">
+                        <div class="top-bar-label">Câu hỏi</div>
+                        <div class="top-bar-value" id="questionNum">1 / 4</div>
+                    </div>
+                </div>
+            </div>
+
+        <!-- ===== Transition Overlay ===== -->
+            <div class="transition-overlay hidden" id="transitionOverlay">
+                <div class="transition-content">
+                    <div class="transition-num" id="transitionNum">2</div>
+                    <div class="transition-label">Câu hỏi tiếp theo</div>
+                    <div class="transition-loader">
+                        <div class="transition-loader-bar" id="transitionBar"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Progress -->
+            <div class="progress-track">
+                <div class="progress-bar" id="progressBar"></div>
+            </div>
+
+            <!-- Timer Bar -->
+            <div class="timer-section">
+                <div class="timer-track">
+                    <div class="timer-bar" id="timerBar"></div>
+                </div>
+                <div class="timer-display">
+                    <span class="timer-icon">⏱️</span>
+                    <span class="timer-value" id="timerValue">60</span>
+                    <span class="timer-unit">s</span>
+                </div>
+            </div>
+
+            <!-- Question Card -->
+            <div class="question-card" id="questionCard">
+                <div class="q-header">
+                    <span class="q-badge" id="qBadge">1</span>
+                    <span class="q-label">Câu hỏi</span>
+                </div>
+                <p class="q-text" id="questionText"></p>
+
+                <div class="answers" id="answersContainer"></div>
+            </div>
+
+            <!-- Next Button (shown after answering) -->
+            <button class="btn-next hidden" id="btnNext">
+                Câu tiếp theo →
+            </button>
+        </div>
+
+        <!-- ========== END SCREEN ========== -->
+        <div class="screen end-screen hidden" id="endScreen">
+            <div class="end-icon" id="endIcon">🏆</div>
+            <h2 class="end-title" id="endTitle">Kết thúc!</h2>
+
+            <div class="score-card">
+                <div class="score-label">Tổng điểm</div>
+                <div class="score-big" id="endScore">0</div>
+                <div class="score-max">/ 40 điểm</div>
+            </div>
+
+            <div class="end-stats">
+                <div class="end-stat">
+                    <div class="end-stat-icon">✅</div>
+                    <div class="end-stat-value" id="endCorrect">0</div>
+                    <div class="end-stat-label">Đúng</div>
+                </div>
+                <div class="end-stat">
+                    <div class="end-stat-icon">❌</div>
+                    <div class="end-stat-value" id="endWrong">0</div>
+                    <div class="end-stat-label">Sai</div>
+                </div>
+                <div class="end-stat">
+                    <div class="end-stat-icon">❤️</div>
+                    <div class="end-stat-value" id="endLives">0</div>
+                    <div class="end-stat-label">Mạng còn</div>
+                </div>
+            </div>
+
+            <p class="end-message" id="endMessage"></p>
+
+            <button class="btn-restart" id="btnRestart">
+                🔄 Chơi Lại
+            </button>
+        </div>
+
+    </div>
+
+    <!-- ========== TROPHY CEREMONY OVERLAY ========== -->
+    <div class="trophy-overlay hidden" id="trophyOverlay">
+
+        <!-- Fireworks layer -->
+        <div class="fireworks" id="fireworksLayer">
+            <div class="firework fw1">
+                <span>✦</span><span>✦</span><span>✦</span><span>✦</span>
+                <span>✦</span><span>✦</span><span>✦</span><span>✦</span>
+            </div>
+            <div class="firework fw2">
+                <span>★</span><span>★</span><span>★</span><span>★</span>
+                <span>★</span><span>★</span><span>★</span><span>★</span>
+            </div>
+            <div class="firework fw3">
+                <span>✧</span><span>✧</span><span>✧</span><span>✧</span>
+                <span>✧</span><span>✧</span><span>✧</span><span>✧</span>
+            </div>
+        </div>
+
+        <!-- Scene: ground + stairs + trophy + sheep -->
+        <div class="intro-scene">
+
+            <!-- Ground -->
+            <div class="ground"></div>
+
+            <!-- Stairs -->
+            <div class="stairs">
+                <div class="stair stair-1"></div>
+                <div class="stair stair-2"></div>
+                <div class="stair stair-3"></div>
+                <div class="stair stair-4"></div>
+                <div class="stair stair-5"></div>
+            </div>
+
+            <!-- Trophy platform at top -->
+            <div class="trophy-platform">
+                <!-- Glow -->
+                <div class="trophy-glow-ring"></div>
+                <!-- Light rays -->
+                <div class="trophy-light-rays">
+                    <div class="light-ray"></div>
+                    <div class="light-ray"></div>
+                    <div class="light-ray"></div>
+                    <div class="light-ray"></div>
+                    <div class="light-ray"></div>
+                    <div class="light-ray"></div>
+                    <div class="light-ray"></div>
+                    <div class="light-ray"></div>
+                </div>
+                <!-- Sparkles around trophy -->
+                <span class="trophy-spark sp1">✦</span>
+                <span class="trophy-spark sp2">★</span>
+                <span class="trophy-spark sp3">✧</span>
+                <span class="trophy-spark sp4">✦</span>
+                <span class="trophy-spark sp5">★</span>
+                <span class="trophy-spark sp6">✧</span>
+                <!-- Trophy -->
+                <div class="trophy-cup" id="trophyIntroIcon">🏆</div>
+            </div>
+
+            <!-- Sheep flock -->
+            <div class="sheep-flock">
+                <span class="sheep sheep-1">🐑</span>
+                <span class="sheep sheep-2">🐑</span>
+                <span class="sheep sheep-3">🐑</span>
+                <span class="sheep sheep-4">🐑</span>
+                <span class="sheep sheep-5">🐑</span>
+            </div>
+        </div>
+
+        <!-- Celebration text (appears after sheep arrive) -->
+        <div class="ceremony-text">
+            <h2 class="ceremony-title" id="trophyText">🎉 Vinh Quang! 🎉</h2>
+            <p class="ceremony-sub" id="trophySub">Đàn cừu đã chinh phục đỉnh núi!</p>
+            <div class="ceremony-score">
+                <span class="ceremony-score-num" id="trophyScoreNum">0</span>
+                <span class="ceremony-score-label">điểm</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Confetti -->
+    <div class="confetti-box" id="confettiBox"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>
